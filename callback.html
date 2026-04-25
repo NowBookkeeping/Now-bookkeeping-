@@ -30,11 +30,11 @@ if (error) {
   document.querySelector('h2').textContent = 'Authorization Failed';
   document.getElementById('status').textContent = 'Error: ' + error;
 } else if (code && realmId) {
-  // Relay to local QBO tool
   const localUrl = `http://localhost:8080/callback?code=${encodeURIComponent(code)}&realmId=${encodeURIComponent(realmId)}&state=${encodeURIComponent(state || '')}`;
-  document.getElementById('status').textContent = 'Authorization received. Completing connection...';
-  // Redirect to local server
-  window.location.href = localUrl;
+  document.querySelector('h2').textContent = 'Almost there!';
+  document.querySelector('.loader').style.display = 'none';
+  document.querySelector('p').textContent = 'Click the button below to complete your QuickBooks connection.';
+  document.getElementById('status').innerHTML = `<a href="${localUrl}" style="display:inline-block;margin-top:1.5rem;background:#b8924a;color:#1a1410;font-weight:700;font-size:1rem;padding:1rem 2.5rem;text-decoration:none;letter-spacing:0.1em;text-transform:uppercase;">Complete Connection →</a>`;
 } else {
   document.querySelector('h2').textContent = 'Something went wrong';
   document.getElementById('status').textContent = 'No authorization code received. Please try again.';

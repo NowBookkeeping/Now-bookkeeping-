@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Connecting to QuickBooks...</title>
+  <meta charset="UTF-8" />
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 4rem; background: #1a1410; color: #fff; }
+    h2 { color: #b8924a; margin-bottom: 1rem; }
+    p { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+    .loader { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #b8924a; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 2rem auto; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <h2>Connecting to QuickBooks...</h2>
+  <div class="loader"></div>
+  <p>Please wait while we complete your authorization.</p>
+  <p id="status"></p>
+  <script>
+    // Grab the code and realmId from the URL QuickBooks sent us to
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const realmId = params.get('realmId');
+    const state = params.get('state');
+    const error = params.get('error');
+
+```
+if (error) {
+  document.querySelector('h2').textContent = 'Authorization Failed';
+  document.getElementById('status').textContent = 'Error: ' + error;
+} else if (code && realmId) {
+  // Relay to local QBO tool
+  const localUrl = `http://localhost:8080/callback?code=${encodeURIComponent(code)}&realmId=${encodeURIComponent(realmId)}&state=${encodeURIComponent(state || '')}`;
+  document.getElementById('status').textContent = 'Authorization received. Completing connection...';
+  // Redirect to local server
+  window.location.href = localUrl;
+} else {
+  document.querySelector('h2').textContent = 'Something went wrong';
+  document.getElementById('status').textContent = 'No authorization code received. Please try again.';
+}
+```
+
+  </script>
+</body>
+</html>

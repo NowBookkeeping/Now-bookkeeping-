@@ -827,11 +827,12 @@ nav {
       });
     }
 
-    function submitForm() {
+    async function submitForm() {
       const agree1 = document.getElementById('agree1').checked;
       const agree2 = document.getElementById('agree2').checked;
       const agree3 = document.getElementById('agree3').checked;
       const authname = document.getElementById('authname').value.trim();
+
       if (!agree1 || !agree2 || !agree3) {
         alert('Please check all three authorization boxes before submitting.');
         return;
@@ -840,12 +841,79 @@ nav {
         alert('Please enter your full legal name for authorization.');
         return;
       }
-      // Hide form, show success
-      document.querySelector('.form-container').style.display = 'none';
-      document.getElementById('progressBar').style.display = 'none';
-      document.querySelector('.form-hero').style.display = 'none';
-      document.getElementById('success').style.display = 'block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Collect all form data
+      const data = {
+        // Section 1
+        first_name:        document.getElementById('fname').value,
+        last_name:         document.getElementById('lname').value,
+        business_name:     document.getElementById('bizname').value,
+        dba:               document.getElementById('dba').value,
+        ein:               document.getElementById('ein').value,
+        business_phone:    document.getElementById('bizphone').value,
+        business_email:    document.getElementById('bizemail').value,
+        business_address:  document.getElementById('bizaddress').value,
+        business_structure:document.getElementById('biztype').value,
+        industry:          document.getElementById('industry').value,
+        years_in_business: document.getElementById('bizage').value,
+        // Section 2
+        service_selected:  document.querySelector('input[name="service"]:checked')?.value || 'Not selected',
+        monthly_revenue:   document.getElementById('revenue').value,
+        monthly_transactions: document.getElementById('transactions').value,
+        accounts_to_reconcile: document.getElementById('accounts').value,
+        payment_platforms: ['pay-stripe','pay-paypal','pay-square','pay-venmo','pay-invoice','pay-other']
+                            .filter(id => document.getElementById(id).checked)
+                            .map(id => document.getElementById(id).nextElementSibling.textContent)
+                            .join(', ') || 'None selected',
+        books_behind:      document.getElementById('behind').value,
+        employees:         document.getElementById('employees').value,
+        inventory:         document.querySelector('input[name="inventory"]:checked')?.value || 'Not selected',
+        special_notes:     document.getElementById('notes').value,
+        // Section 3
+        quickbooks_status: document.querySelector('input[name="qb"]:checked')?.value || 'Not selected',
+        quickbooks_email:  document.getElementById('qbemail').value,
+        quickbooks_company:document.getElementById('qbcompany').value,
+        invite_sent:       document.querySelector('input[name="invite"]:checked')?.value || 'Not selected',
+        accounting_method: document.querySelector('input[name="method"]:checked')?.value || 'Not selected',
+        // Section 4
+        transaction_notes: document.getElementById('txnotes').value,
+        // Section 5
+        authorized_name:   document.getElementById('authname').value,
+        authorized_title:  document.getElementById('authtitle').value,
+        authorized_date:   document.getElementById('authdate').value,
+        communication_pref:document.querySelector('input[name="comm"]:checked')?.value || 'Not selected',
+        referral_source:   document.getElementById('referral').value,
+        _subject:          'New Client Intake — ' + document.getElementById('bizname').value,
+        _replyto:          document.getElementById('bizemail').value,
+      };
+
+      // Show loading state
+      const submitBtn = document.querySelector('.btn-dark');
+      submitBtn.textContent = 'Sending...';
+      submitBtn.disabled = true;
+
+      try {
+        const response = await fetch('https://formspree.io/f/xvzdljyz', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          // Hide form, show success
+          document.querySelector('.form-container').style.display = 'none';
+          document.getElementById('progressBar').style.display = 'none';
+          document.querySelector('.form-hero').style.display = 'none';
+          document.getElementById('success').style.display = 'block';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          throw new Error('Submission failed');
+        }
+      } catch (err) {
+        submitBtn.textContent = 'Submit Intake Form ✦';
+        submitBtn.disabled = false;
+        alert('There was an issue submitting your form. Please email your information directly to Info@now-bookkeeping.com or try again.');
+      }
     }
 
     // Set today's date

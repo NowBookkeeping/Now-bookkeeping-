@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Intake Form | Now. Bookkeeping</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #0d0d0d; --paper: #f5f1eb; --cream: #ede8e0;
+      --gold: #b8924a; --gold-lt: #d4ae78; --deep: #1a1410;
+      --mid: #5a4e44; --faint: #c8c0b4;
+      --ff-display: 'Playfair Display', Georgia, serif;
+      --ff-body: 'DM Sans', system-ui, sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--paper); color: var(--ink); font-family: var(--ff-body); font-size: 16px; line-height: 1.7; min-height: 100vh; }
+
+```
+/* NAV */
+nav {
+  background: var(--deep); padding: 1.2rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo { font-family: var(--ff-display); font-size: 1.3rem; font-weight: 900; color: #fff; text-decoration: none; }
+.nav-logo span { color: var(--gold); }
+.nav-secure { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-lt); display: flex; align-items: center; gap: 0.4rem; }
+
+/* HERO */
+.form-hero {
+  background: var(--deep);
+  padding: 3rem 2rem 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.form-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(184,146,74,0.12) 0%, transparent 70%);
+}
+.form-hero-tag {
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--gold);
+  display: block; margin-bottom: 1rem; position: relative;
+}
+.form-hero h1 {
+  font-family: var(--ff-display); font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900; color: #fff; margin-bottom: 0.8rem; position: relative;
+}
+.form-hero p {
+  font-size: 0.95rem; color: rgba(255,255,255,0.5);
+  max-width: 480px; margin: 0 auto; font-weight: 300; position: relative;
+}
+
+/* PROGRESS */
+.progress-wrap {
+  background: var(--cream); padding: 1.5rem 2rem;
+  display: flex; align-items: center; justify-content: center; gap: 0;
+  position: sticky; top: 0; z-index: 50;
+  border-bottom: 1px solid var(--faint);
+}
+.progress-step {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--faint);
+  transition: color 0.3s;
+}
+.progress-step.active { color: var(--gold); }
+.progress-step.done { color: var(--mid); }
+.step-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 2px solid var(--faint);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+.progress-step.active .step-num { border-color: var(--gold); color: var(--gold); }
+.progress-step.done .step-num { border-color: var(--mid); background: var(--mid); color: #fff; }
+.step-line { width: 40px; height: 2px; background: var(--faint); margin: 0 0.5rem; flex-shrink: 0; }
+.step-line.done { background: var(--mid); }
+
+/* FORM CONTAINER */
+.form-container {
+  max-width: 680px; margin: 0 auto; padding: 3rem 2rem 6rem;
+}
+
+/* SECTIONS */
+.form-section { display: none; }
+.form-section.active { display: block; animation: fadeUp 0.4s ease both; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.section-title {
+  font-family: var(--ff-display); font-size: 1.6rem; font-weight: 700;
+  color: var(--deep); margin-bottom: 0.4rem;
+}
+.section-sub {
+  font-size: 0.88rem; color: var(--mid); font-weight: 300;
+  margin-bottom: 2.5rem; padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--faint);
+}
+.gold-rule { width: 40px; height: 3px; background: var(--gold); margin: 0.8rem 0 1.5rem; }
+
+/* FORM FIELDS */
+.form-group { margin-bottom: 1.6rem; }
+.form-group label {
+  display: block; font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--mid); margin-bottom: 0.5rem;
+}
+.form-group label .req { color: var(--gold); margin-left: 2px; }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%; background: #fff;
+  border: 1px solid var(--faint); border-radius: 0;
+  color: var(--ink); font-family: var(--ff-body);
+  font-size: 0.95rem; padding: 0.9rem 1rem;
+  outline: none; transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus { border-color: var(--gold); }
+.form-group textarea { min-height: 110px; resize: vertical; }
+.form-group select option { background: #fff; }
+.form-hint { font-size: 0.78rem; color: var(--faint); margin-top: 0.4rem; font-style: italic; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+/* CHECKBOX GROUP */
+.check-group { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 0.5rem; }
+.check-item {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 0.8rem 1rem; background: #fff;
+  border: 1px solid var(--faint); cursor: pointer;
+  transition: border-color 0.2s;
+}
+.check-item:hover { border-color: var(--gold-lt); }
+.check-item input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--gold); flex-shrink: 0; }
+.check-item label { font-size: 0.9rem; color: var(--mid); cursor: pointer; font-weight: 300; }
+
+/* RADIO GROUP */
+.radio-group { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 0.5rem; }
+.radio-item {
+  display: flex; align-items: center; gap: 0.8rem;
+  padding: 0.9rem 1rem; background: #fff;
+  border: 1px solid var(--faint); cursor: pointer;
+  transition: all 0.2s;
+}
+.radio-item:hover { border-color: var(--gold-lt); }
+.radio-item.selected { border-color: var(--gold); background: rgba(184,146,74,0.04); }
+.radio-item input[type="radio"] { width: 18px; height: 18px; accent-color: var(--gold); flex-shrink: 0; }
+.radio-item label { font-size: 0.9rem; color: var(--mid); cursor: pointer; font-weight: 300; }
+
+/* INFO BOX */
+.info-box {
+  background: var(--cream); border-left: 3px solid var(--gold);
+  padding: 1.2rem 1.5rem; margin-bottom: 2rem;
+}
+.info-box p { font-size: 0.85rem; color: var(--mid); font-weight: 300; }
+.info-box strong { color: var(--deep); }
+
+/* UPLOAD AREA */
+.upload-area {
+  border: 2px dashed var(--faint); padding: 2rem;
+  text-align: center; background: #fff; cursor: pointer;
+  transition: border-color 0.2s;
+}
+.upload-area:hover { border-color: var(--gold); }
+.upload-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+.upload-text { font-size: 0.85rem; color: var(--mid); font-weight: 300; }
+.upload-text strong { color: var(--gold); }
+.upload-area input { display: none; }
+
+/* NAVIGATION BUTTONS */
+.form-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--faint);
+}
+.btn {
+  display: inline-block; font-family: var(--ff-body);
+  font-size: 0.82rem; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; padding: 0.95rem 2.2rem;
+  border: 2px solid var(--gold); background: var(--gold);
+  color: #fff; cursor: pointer; transition: all 0.25s;
+}
+.btn:hover { background: transparent; color: var(--gold); }
+.btn-ghost {
+  background: transparent; border-color: var(--faint); color: var(--mid);
+}
+.btn-ghost:hover { border-color: var(--mid); background: transparent; color: var(--mid); }
+.btn-dark { background: var(--deep); border-color: var(--deep); color: var(--gold-lt); }
+.btn-dark:hover { background: transparent; color: var(--deep); }
+
+/* SUCCESS SCREEN */
+#success {
+  display: none; text-align: center;
+  padding: 5rem 2rem;
+  max-width: 560px; margin: 0 auto;
+}
+.success-icon { font-size: 4rem; margin-bottom: 1.5rem; }
+.success-title { font-family: var(--ff-display); font-size: 2.2rem; font-weight: 900; color: var(--deep); margin-bottom: 1rem; }
+.success-body { font-size: 0.95rem; color: var(--mid); font-weight: 300; margin-bottom: 2rem; line-height: 1.8; }
+.success-next {
+  background: var(--cream); padding: 1.5rem 2rem; text-align: left; margin-bottom: 2rem;
+}
+.success-next h4 { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.8rem; }
+.success-next ul { list-style: none; }
+.success-next ul li { font-size: 0.88rem; color: var(--mid); padding: 0.3rem 0; display: flex; gap: 0.6rem; }
+.success-next ul li::before { content: '✦'; color: var(--gold); font-size: 0.6rem; margin-top: 0.35rem; flex-shrink: 0; }
+
+@media (max-width: 600px) {
+  .form-row { grid-template-columns: 1fr; }
+  .progress-wrap { gap: 0; padding: 1rem; }
+  .step-line { width: 20px; }
+  .progress-step span:last-child { display: none; }
+}
+```
+
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Now<span>.</span> Bookkeeping</a>
+    <div class="nav-secure">🔒 Secure Form</div>
+  </nav>
+
+  <div class="form-hero">
+    <span class="form-hero-tag">Client Onboarding</span>
+    <h1>Welcome. Let's get started.</h1>
+    <p>Complete this form after your discovery call. This gives us everything we need to begin your bookkeeping setup with zero back-and-forth.</p>
+  </div>
+
+  <!-- PROGRESS BAR -->
+
+  <div class="progress-wrap" id="progressBar">
+    <div class="progress-step active" id="step-indicator-1">
+      <div class="step-num">1</div>
+      <span>Business Info</span>
+    </div>
+    <div class="step-line" id="line-1"></div>
+    <div class="progress-step" id="step-indicator-2">
+      <div class="step-num">2</div>
+      <span>financials</span>
+    </div>
+    <div class="step-line" id="line-2"></div>
+    <div class="progress-step" id="step-indicator-3">
+      <div class="step-num">3</div>
+      <span>QuickBooks</span>
+    </div>
+    <div class="step-line" id="line-3"></div>
+    <div class="progress-step" id="step-indicator-4">
+      <div class="step-num">4</div>
+      <span>Documents</span>
+    </div>
+    <div class="step-line" id="line-4"></div>
+    <div class="progress-step" id="step-indicator-5">
+      <div class="step-num">5</div>
+      <span>Authorization</span>
+    </div>
+  </div>
+
+  <div class="form-container">
+
+```
+<!-- ═══ SECTION 1: BUSINESS INFO ═══ -->
+<div class="form-section active" id="section-1">
+  <h2 class="section-title">Business Information</h2>
+  <div class="gold-rule"></div>
+  <p class="section-sub">Legal business details used for your file setup and reporting.</p>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>First Name <span class="req">*</span></label>
+      <input type="text" id="fname" placeholder="Jane" autocomplete="given-name" />
+    </div>
+    <div class="form-group">
+      <label>Last Name <span class="req">*</span></label>
+      <input type="text" id="lname" placeholder="Smith" autocomplete="family-name" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Legal Business Name <span class="req">*</span></label>
+    <input type="text" id="bizname" placeholder="Smith Consulting LLC" />
+  </div>
+
+  <div class="form-group">
+    <label>DBA / Trade Name (if different)</label>
+    <input type="text" id="dba" placeholder="Leave blank if same as above" />
+  </div>
+
+  <div class="form-group">
+    <label>Employer Identification Number (EIN) <span class="req">*</span></label>
+    <input type="text" id="ein" placeholder="XX-XXXXXXX" maxlength="10" />
+    <div class="form-hint">Found on your IRS letter or prior tax return. Format: XX-XXXXXXX</div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Business Phone <span class="req">*</span></label>
+      <input type="tel" id="bizphone" placeholder="(404) 000-0000" autocomplete="tel" />
+    </div>
+    <div class="form-group">
+      <label>Business Email <span class="req">*</span></label>
+      <input type="email" id="bizemail" placeholder="you@yourbusiness.com" autocomplete="email" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Business Address</label>
+    <input type="text" id="bizaddress" placeholder="123 Main St, Atlanta, GA 30301" autocomplete="street-address" />
+  </div>
+
+  <div class="form-group">
+    <label>Business Structure <span class="req">*</span></label>
+    <select id="biztype">
+      <option value="">Select your business structure</option>
+      <option>Sole Proprietor</option>
+      <option>Single-Member LLC</option>
+      <option>Multi-Member LLC</option>
+      <option>S-Corporation</option>
+      <option>C-Corporation</option>
+      <option>Partnership</option>
+      <option>Non-Profit</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Industry / Type of Business <span class="req">*</span></label>
+    <input type="text" id="industry" placeholder="e.g. Real Estate, E-commerce, Consulting, Restaurant" />
+  </div>
+
+  <div class="form-group">
+    <label>How long have you been in business?</label>
+    <select id="bizage">
+      <option value="">Select one</option>
+      <option>Less than 1 year</option>
+      <option>1–2 years</option>
+      <option>3–5 years</option>
+      <option>5–10 years</option>
+      <option>10+ years</option>
+    </select>
+  </div>
+
+  <div class="form-nav">
+    <div></div>
+    <button class="btn" onclick="goToSection(2)">Next: Financial Info →</button>
+  </div>
+</div>
+
+<!-- ═══ SECTION 2: FINANCIALS ═══ -->
+<div class="form-section" id="section-2">
+  <h2 class="section-title">Financial Overview</h2>
+  <div class="gold-rule"></div>
+  <p class="section-sub">Help us understand the scope of your books so we can set up your file correctly.</p>
+
+  <div class="form-group">
+    <label>Service Selected <span class="req">*</span></label>
+    <div class="radio-group">
+      <div class="radio-item" onclick="selectRadio(this, 'service')">
+        <input type="radio" name="service" value="monthly" />
+        <label>Monthly Bookkeeping — ongoing monthly management</label>
+      </div>
+      <div class="radio-item" onclick="selectRadio(this, 'service')">
+        <input type="radio" name="service" value="cleanup" />
+        <label>Deep-Dive Cleanup — catch-up on past months/years</label>
+      </div>
+      <div class="radio-item" onclick="selectRadio(this, 'service')">
+        <input type="radio" name="service" value="both" />
+        <label>Both — cleanup first, then ongoing monthly</label>
+      </div>
+      <div class="radio-item" onclick="selectRadio(this, 'service')">
+        <input type="radio" name="service" value="consultation" />
+        <label>Consultation only</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Approximate Monthly Revenue</label>
+    <select id="revenue">
+      <option value="">Select range</option>
+      <option>Under $5,000/month</option>
+      <option>$5,000 – $15,000/month</option>
+      <option>$15,000 – $30,000/month</option>
+      <option>$30,000 – $75,000/month</option>
+      <option>$75,000+/month</option>
+      <option>Varies significantly</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Approximate Number of Monthly Transactions</label>
+    <select id="transactions">
+      <option value="">Select range</option>
+      <option>Under 50 transactions/month</option>
+      <option>50–150 transactions/month</option>
+      <option>150–300 transactions/month</option>
+      <option>300–500 transactions/month</option>
+      <option>500+ transactions/month</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>How many bank/credit accounts need to be reconciled? <span class="req">*</span></label>
+    <select id="accounts">
+      <option value="">Select one</option>
+      <option>1 account</option>
+      <option>2–3 accounts</option>
+      <option>4–5 accounts</option>
+      <option>6+ accounts</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Do you accept payments via any of the following?</label>
+    <div class="check-group">
+      <div class="check-item">
+        <input type="checkbox" id="pay-stripe" />
+        <label for="pay-stripe">Stripe</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="pay-paypal" />
+        <label for="pay-paypal">PayPal</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="pay-square" />
+        <label for="pay-square">Square</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="pay-venmo" />
+        <label for="pay-venmo">Venmo / Cash App / Zelle</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="pay-invoice" />
+        <label for="pay-invoice">Invoice-based (check, wire, ACH)</label>
+      </div>
+      <div class="check-item">
+        <input type="checkbox" id="pay-other" />
+        <label for="pay-other">Other</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>How far behind are your books? <span class="req">*</span></label>
+    <select id="behind">
+      <option value="">Select one</option>
+      <option>Up to date</option>
+      <option>1–3 months behind</option>
+      <option>4–6 months behind</option>
+      <option>7–12 months behind</option>
+      <option>1–2 years behind</option>
+      <option>2+ years behind</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Do you have employees or contractors?</label>
+    <select id="employees">
+      <option value="">Select one</option>
+      <option>No — just me</option>
+      <option>1–5 employees/contractors</option>
+      <option>6–15 employees/contractors</option>
+      <option>16+ employees/contractors</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Do you have inventory?</label>
+    <div class="radio-group">
+      <div class="radio-item" onclick="selectRadio(this, 'inventory')">
+        <input type="radio" name="inventory" value="no" />
+        <label>No inventory</label>
+      </div>
+      <div class="radio-item" onclick="selectRadio(this, 'inventory')">
+        <input type="radio" name="inventory" value="yes" />
+        <label>Yes — I sell physical products</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Anything specific you want addressed in your books?</label>
+    <textarea id="notes" placeholder="e.g. uncategorized transactions, missing receipts, multiple revenue streams, specific reporting needs..."></textarea>
+  </div>
+
+  <div class="form-nav">
+    <button class="btn btn-ghost" onclick="goToSection(1)">← Back</button>
+    <button class="btn" onclick="goToSection(3)">Next: QuickBooks →</button>
+  </div>
+</div>
+
+<!-- ═══ SECTION 3: QUICKBOOKS ═══ -->
+<div class="form-section" id="section-3">
+  <h2 class="section-title">QuickBooks Access</h2>
+  <div class="gold-rule"></div>
+  <p class="section-sub">We need access to your QuickBooks file to begin work. Please provide the details below.</p>
+
+  <div class="info-box">
+    <p><strong>Why we need this:</strong> Bookkeeping is performed directly inside your QuickBooks account. You remain the account owner at all times. We will be added as an Accountant User — a read/write role that does not give us billing or admin access.</p>
+  </div>
+
+  <div class="form-group">
+    <label>Do you currently have QuickBooks? <span class="req">*</span></label>
+    <div class="radio-group">
+      <div class="radio-item" onclick="selectRadio(this, 'qb'); toggleQBFields(true)">
+        <input type="radio" name="qb" value="yes-online" />
+        <label>Yes — QuickBooks Online</label>
+      </div>
+      <div class="radio-item" onclick="selectRadio(this, 'qb'); toggleQBFields(true)">
+        <input type="radio" name="qb" value="yes-desktop" />
+        <label>Yes — QuickBooks Desktop</label>
+      </div>
+      <div class="radio-item" onclick="selectRadio(this, 'qb'); toggleQBFields(false)">
+        <input type="radio" name="qb" value="no" />
+        <label>No — I need to set it up</label>
+      </div>
+      <div class="radio-item" onclick="selectRadio(this, 'qb'); toggleQBFields(false)">
+        <input type="radio" name="qb" value="unsure" />
+        <label>Not sure</label>
+      </div>
+    </div>
+  </div>
+
+  <div id="qb-fields" style="display:none;">
+    <div class="form-group">
+      <label>QuickBooks Login Email <span class="req">*</span></label>
+      <input type="email" id="qbemail" placeholder="email used to log into QuickBooks" />
+      <div class="form-hint">We will send an Accountant Invite to: Info@now-bookkeeping.com — please accept it in your QuickBooks account.</div>
+    </div>
+
+    <div class="form-group">
+      <label>QuickBooks Company Name (as it appears in QBO)</label>
+      <input type="text" id="qbcompany" placeholder="Company name in QuickBooks" />
+    </div>
+
+    <div class="form-group">
+      <label>Have you already sent the Accountant Invite?</label>
+      <div class="radio-group">
+        <div class="radio-item" onclick="selectRadio(this, 'invite')">
+          <input type="radio" name="invite" value="yes" />
+          <label>Yes — invite already sent</label>
+        </div>
+        <div class="radio-item" onclick="selectRadio(this, 'invite')">
+          <input type="radio" name="invite" value="no" />
+          <label>No — I need instructions</label>
+        </div>
+      </div>
+      <div class="form-hint">To invite: In QuickBooks Online go to Settings → Manage Users → Accounting Firms → Invite. Use email: Info@now-bookkeeping.com</div>
+    </div>
+  </div>
+
+  <div id="qb-setup-note" style="display:none;">
+    <div class="info-box">
+      <p><strong>No problem!</strong> We will set up your QuickBooks Online account as part of your onboarding. We'll reach out with next steps after receiving this form.</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>What accounting method do you use?</label>
+    <div class="radio-group">
+      <div class="radio-item" onclick="selectRadio(this, 'method')">
+        <input type="radio" name="method" value="cash" />
+        <label>Cash basis — record when money is received/paid</label>
+      </div>
+      <div class="radio-item" onclick="selectRadio(this, 'method')">
+        <input type="radio" name="method" value="accrual" />
+        <label>Accrual basis — record when earned/incurred</label>
+      </div>
+      <div class="radio-item" onclick="selectRadio(this, 'method')">
+        <input type="radio" name="method" value="unsure" />
+        <label>Not sure — let's discuss</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-nav">
+    <button class="btn btn-ghost" onclick="goToSection(2)">← Back</button>
+    <button class="btn" onclick="goToSection(4)">Next: Documents →</button>
+  </div>
+</div>
+
+<!-- ═══ SECTION 4: DOCUMENTS ═══ -->
+<div class="form-section" id="section-4">
+  <h2 class="section-title">Document Upload</h2>
+  <div class="gold-rule"></div>
+  <p class="section-sub">Upload any available documents below. You can also email them to Info@now-bookkeeping.com if easier.</p>
+
+  <div class="info-box">
+    <p><strong>What to upload:</strong> Bank statements (last 3–12 months), credit card statements, prior year tax returns, and any existing financial reports. Upload what you have — missing items can be requested later.</p>
+  </div>
+
+  <div class="form-group">
+    <label>Bank Statements</label>
+    <div class="upload-area" onclick="document.getElementById('upload-bank').click()">
+      <div class="upload-icon">🏦</div>
+      <div class="upload-text">
+        <strong>Tap to upload</strong> or drag files here<br/>
+        PDF or CSV · Last 3–12 months recommended
+      </div>
+      <input type="file" id="upload-bank" multiple accept=".pdf,.csv,.xls,.xlsx" onchange="showUploaded(this, 'bank-list')" />
+    </div>
+    <div id="bank-list" style="margin-top: 0.5rem;"></div>
+  </div>
+
+  <div class="form-group">
+    <label>Credit Card Statements</label>
+    <div class="upload-area" onclick="document.getElementById('upload-cc').click()">
+      <div class="upload-icon">💳</div>
+      <div class="upload-text">
+        <strong>Tap to upload</strong> or drag files here<br/>
+        PDF or CSV · All business cards
+      </div>
+      <input type="file" id="upload-cc" multiple accept=".pdf,.csv,.xls,.xlsx" onchange="showUploaded(this, 'cc-list')" />
+    </div>
+    <div id="cc-list" style="margin-top: 0.5rem;"></div>
+  </div>
+
+  <div class="form-group">
+    <label>Prior Year Tax Returns (if available)</label>
+    <div class="upload-area" onclick="document.getElementById('upload-tax').click()">
+      <div class="upload-icon">📋</div>
+      <div class="upload-text">
+        <strong>Tap to upload</strong> or drag files here<br/>
+        PDF · Most recent 1–2 years
+      </div>
+      <input type="file" id="upload-tax" multiple accept=".pdf" onchange="showUploaded(this, 'tax-list')" />
+    </div>
+    <div id="tax-list" style="margin-top: 0.5rem;"></div>
+  </div>
+
+  <div class="form-group">
+    <label>Any Other Relevant Documents</label>
+    <div class="upload-area" onclick="document.getElementById('upload-other').click()">
+      <div class="upload-icon">📁</div>
+      <div class="upload-text">
+        <strong>Tap to upload</strong> or drag files here<br/>
+        Any additional financial documents
+      </div>
+      <input type="file" id="upload-other" multiple accept=".pdf,.csv,.xls,.xlsx,.doc,.docx" onchange="showUploaded(this, 'other-list')" />
+    </div>
+    <div id="other-list" style="margin-top: 0.5rem;"></div>
+  </div>
+
+  <div class="form-group">
+    <label>Transaction Questions / Notes</label>
+    <textarea id="txnotes" placeholder="List any specific transactions you need help categorizing, unusual items, or questions about your accounts..."></textarea>
+    <div class="form-hint">Example: "We received a $10,000 owner contribution in March — not sure how to categorize it."</div>
+  </div>
+
+  <div class="form-nav">
+    <button class="btn btn-ghost" onclick="goToSection(3)">← Back</button>
+    <button class="btn" onclick="goToSection(5)">Next: Authorization →</button>
+  </div>
+</div>
+
+<!-- ═══ SECTION 5: AUTHORIZATION ═══ -->
+<div class="form-section" id="section-5">
+  <h2 class="section-title">Authorization & Agreement</h2>
+  <div class="gold-rule"></div>
+  <p class="section-sub">Please review and confirm the following before submitting.</p>
+
+  <div class="form-group">
+    <label>Full Legal Name (for authorization) <span class="req">*</span></label>
+    <input type="text" id="authname" placeholder="Your full legal name" />
+  </div>
+
+  <div class="form-group">
+    <label>Your Title / Role <span class="req">*</span></label>
+    <input type="text" id="authtitle" placeholder="e.g. Owner, CEO, Managing Member" />
+  </div>
+
+  <div class="form-group">
+    <label>Today's Date <span class="req">*</span></label>
+    <input type="date" id="authdate" />
+  </div>
+
+  <div class="form-group">
+    <label>Preferred Communication Method <span class="req">*</span></label>
+    <div class="radio-group">
+      <div class="radio-item" onclick="selectRadio(this, 'comm')">
+        <input type="radio" name="comm" value="email" />
+        <label>Email</label>
+      </div>
+      <div class="radio-item" onclick="selectRadio(this, 'comm')">
+        <input type="radio" name="comm" value="text" />
+        <label>Text / SMS</label>
+      </div>
+      <div class="radio-item" onclick="selectRadio(this, 'comm')">
+        <input type="radio" name="comm" value="either" />
+        <label>Either is fine</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>How did you hear about Now. Bookkeeping?</label>
+    <select id="referral">
+      <option value="">Select one</option>
+      <option>Google Search</option>
+      <option>Google Business Profile</option>
+      <option>TikTok</option>
+      <option>Instagram</option>
+      <option>LinkedIn</option>
+      <option>Referral from a CPA / Tax Preparer</option>
+      <option>Referral from a friend or colleague</option>
+      <option>now-bookkeeping.com</option>
+      <option>Other</option>
+    </select>
+  </div>
+
+  <div class="info-box" style="margin-top: 2rem;">
+    <p><strong>By submitting this form, you confirm that:</strong><br/><br/>
+    (1) You are authorized to provide the information and documents submitted on behalf of the business listed above.<br/><br/>
+    (2) You authorize Now. Bookkeeping (Kenetta Muhammad) to access your QuickBooks account as an Accountant User for the purpose of providing bookkeeping services.<br/><br/>
+    (3) All information provided is accurate to the best of your knowledge.<br/><br/>
+    (4) You understand this form does not constitute a signed engagement agreement — a separate service agreement will be sent via HoneyBook.</p>
+  </div>
+
+  <div class="check-group" style="margin-bottom: 2rem;">
+    <div class="check-item">
+      <input type="checkbox" id="agree1" />
+      <label for="agree1">I confirm I am authorized to submit this information on behalf of this business.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="agree2" />
+      <label for="agree2">I authorize Now. Bookkeeping to access my QuickBooks account as an Accountant User.</label>
+    </div>
+    <div class="check-item">
+      <input type="checkbox" id="agree3" />
+      <label for="agree3">I understand a separate service agreement will be sent for my signature.</label>
+    </div>
+  </div>
+
+  <div class="form-nav">
+    <button class="btn btn-ghost" onclick="goToSection(4)">← Back</button>
+    <button class="btn btn-dark" onclick="submitForm()">Submit Intake Form ✦</button>
+  </div>
+</div>
+```
+
+  </div><!-- end form-container -->
+
+  <!-- SUCCESS SCREEN -->
+
+  <div id="success">
+    <div class="success-icon">✦</div>
+    <h2 class="success-title">You're all set.</h2>
+    <p class="success-body">Thank you for completing your client intake. Kenetta will review your information and be in touch within one business day to confirm next steps and send your service agreement.</p>
+    <div class="success-next">
+      <h4>What happens next</h4>
+      <ul>
+        <li>Kenetta reviews your intake form (within 1 business day)</li>
+        <li>Service agreement sent via HoneyBook for e-signature</li>
+        <li>Invoice or autopay setup sent for your approval</li>
+        <li>QuickBooks access confirmed — work begins</li>
+        <li>First financial report delivered per your agreed schedule</li>
+      </ul>
+    </div>
+    <a href="index.html" class="btn">Return to Now. Bookkeeping</a>
+  </div>
+
+  <script>
+    let currentSection = 1;
+    const totalSections = 5;
+
+    function goToSection(num) {
+      document.getElementById('section-' + currentSection).classList.remove('active');
+      document.getElementById('step-indicator-' + currentSection).classList.remove('active');
+      document.getElementById('step-indicator-' + currentSection).classList.add('done');
+      if (num < currentSection) {
+        document.getElementById('step-indicator-' + currentSection).classList.remove('done');
+        document.getElementById('step-indicator-' + num).classList.remove('done');
+      }
+      currentSection = num;
+      document.getElementById('section-' + currentSection).classList.add('active');
+      document.getElementById('step-indicator-' + currentSection).classList.add('active');
+      document.getElementById('step-indicator-' + currentSection).classList.remove('done');
+      // update lines
+      for (let i = 1; i <= 4; i++) {
+        const line = document.getElementById('line-' + i);
+        if (line) line.classList.toggle('done', i < num);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function selectRadio(el, name) {
+      document.querySelectorAll('input[name="' + name + '"]').forEach(r => {
+        r.closest('.radio-item').classList.remove('selected');
+      });
+      el.classList.add('selected');
+      el.querySelector('input[type="radio"]').checked = true;
+    }
+
+    function toggleQBFields(show) {
+      document.getElementById('qb-fields').style.display = show ? 'block' : 'none';
+      document.getElementById('qb-setup-note').style.display = show ? 'none' : 'block';
+      const qbVal = document.querySelector('input[name="qb"]:checked')?.value;
+      if (qbVal === 'no' || qbVal === 'unsure') {
+        document.getElementById('qb-setup-note').style.display = 'block';
+        document.getElementById('qb-fields').style.display = 'none';
+      }
+    }
+
+    function showUploaded(input, listId) {
+      const list = document.getElementById(listId);
+      list.innerHTML = '';
+      Array.from(input.files).forEach(file => {
+        const div = document.createElement('div');
+        div.style.cssText = 'font-size:0.8rem;color:var(--mid);padding:0.3rem 0;display:flex;gap:0.5rem;';
+        div.innerHTML = '✅ ' + file.name;
+        list.appendChild(div);
+      });
+    }
+
+    function submitForm() {
+      const agree1 = document.getElementById('agree1').checked;
+      const agree2 = document.getElementById('agree2').checked;
+      const agree3 = document.getElementById('agree3').checked;
+      const authname = document.getElementById('authname').value.trim();
+      if (!agree1 || !agree2 || !agree3) {
+        alert('Please check all three authorization boxes before submitting.');
+        return;
+      }
+      if (!authname) {
+        alert('Please enter your full legal name for authorization.');
+        return;
+      }
+      // Hide form, show success
+      document.querySelector('.form-container').style.display = 'none';
+      document.getElementById('progressBar').style.display = 'none';
+      document.querySelector('.form-hero').style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Set today's date
+    document.getElementById('authdate').valueAsDate = new Date();
+  </script>
+
+</body>
+</html>
